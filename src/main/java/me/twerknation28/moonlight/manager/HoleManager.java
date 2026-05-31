@@ -1,118 +1,134 @@
 package me.twerknation28.moonlight.manager;
 
-import com.google.common.eventbus.Subscribe;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import me.twerknation28.moonlight.event.impl.UpdateEvent;
-import me.twerknation28.moonlight.features.Feature;
-import me.twerknation28.moonlight.manager.PositionManager;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.decoration.EndCrystalEntity;
 import net.minecraft.entity.ExperienceOrbEntity;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.decoration.EndCrystalEntity;
-import net.minecraft.util.math.BlockPos;
+import java.util.Collection;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
+import java.util.LinkedList;
+import net.minecraft.entity.Entity;
 import org.jetbrains.annotations.Nullable;
+import net.minecraft.block.Block;
+import java.util.Iterator;
+import net.minecraft.util.math.Direction;
+import net.minecraft.block.Blocks;
+import com.google.common.eventbus.Subscribe;
+import me.twerknation28.moonlight.event.impl.UpdateEvent;
+import java.util.ArrayList;
+import net.minecraft.util.math.BlockPos;
+import java.util.List;
+import me.twerknation28.moonlight.features.Feature;
 
-public class HoleManager
-extends Feature {
+public class HoleManager extends Feature
+{
     private final int range = 8;
-    private final List<Hole> holes = new ArrayList<Hole>();
-    private final BlockPos.Mutable pos = new BlockPos.Mutable();
-
+    private final List<Hole> holes;
+    private final BlockPos.Mutable pos;
+    
     public HoleManager() {
-        EVENT_BUS.register(this);
+        this.holes = new ArrayList<Hole>();
+        this.pos = new BlockPos.Mutable();
+        HoleManager.EVENT_BUS.register(this);
     }
-
+    
     @Subscribe
-    private void onTick(UpdateEvent event) {
+    private void onTick(final UpdateEvent event) {
         this.holes.clear();
         for (int x = -8; x < 8; ++x) {
             for (int y = -8; y < 8; ++y) {
                 for (int z = -8; z < 8; ++z) {
-                    this.pos.set(HoleManager.mc.player.getX() + (double)x, HoleManager.mc.player.getY() + (double)y, HoleManager.mc.player.getZ() + (double)z);
-                    Hole hole = this.getHole((BlockPos)this.pos);
-                    if (hole == null) continue;
-                    this.holes.add(hole);
+                    this.pos.set(HoleManager.mc.player.getX() + x, HoleManager.mc.player.getY() + y, HoleManager.mc.player.getZ() + z);
+                    final Hole hole = this.getHole((BlockPos)this.pos);
+                    if (hole != null) {
+                        this.holes.add(hole);
+                    }
                 }
             }
         }
     }
-
+    
     @Nullable
-    public Hole getHole(BlockPos pos) {
+    public Hole getHole(final BlockPos pos) {
         if (HoleManager.mc.world.getBlockState(pos).getBlock() != Blocks.AIR) {
             return null;
         }
         HoleType type = HoleType.BEDROCK;
-        for (Direction direction : Direction.Type.HORIZONTAL) {
-            Block block = HoleManager.mc.world.getBlockState(pos.offset(direction)).getBlock();
+        for (final Direction direction : Direction.Type.HORIZONTAL) {
+            final Block block = HoleManager.mc.world.getBlockState(pos.offset(direction)).getBlock();
             if (block == Blocks.OBSIDIAN) {
                 type = HoleType.UNSAFE;
+            }
+            else {
+                if (block != Blocks.BEDROCK) {
+                    return null;
+                }
                 continue;
             }
-            if (block == Blocks.BEDROCK) continue;
-            return null;
         }
         return new Hole(pos, type);
     }
-
-    public static List<BlockPos> getSurroundEntities(Entity entity) {
-        LinkedList<BlockPos> entities = new LinkedList<BlockPos>();
+    
+    public static List<BlockPos> getSurroundEntities(final Entity entity) {
+        final List<BlockPos> entities = new LinkedList<BlockPos>();
         entities.add(entity.getBlockPos());
-        for (Direction dir : Direction.values()) {
-            if (!dir.getAxis().isHorizontal()) continue;
-            for (BlockPos pos : PositionManager.getAllInBox(entity.getBoundingBox(), entity.getBlockPos())) {
-                if (entities.contains(pos)) continue;
-                entities.add(pos);
+        for (final Direction dir : Direction.values()) {
+            if (dir.getAxis().isHorizontal()) {
+                for (final BlockPos pos : PositionManager.getAllInBox(entity.getBoundingBox(), entity.getBlockPos())) {
+                    if (!entities.contains(pos)) {
+                        entities.add(pos);
+                    }
+                }
             }
         }
         return entities;
     }
-
-    public List<BlockPos> getSurroundEntities(BlockPos pos) {
-        LinkedList<BlockPos> entities = new LinkedList<BlockPos>();
+    
+    public List<BlockPos> getSurroundEntities(final BlockPos pos) {
+        final List<BlockPos> entities = new LinkedList<BlockPos>();
         entities.add(pos);
-        for (Direction dir : Direction.values()) {
-            BlockPos pos1;
-            List<Entity> box;
-            if (!dir.getAxis().isHorizontal() || (box = HoleManager.mc.world.getOtherEntities(null, new Box(pos1 = pos.add(dir.getVector()))).stream().filter(e -> !this.isEntityBlockingSurround((Entity)e)).toList()).isEmpty()) continue;
-            for (Entity entity : box) {
-                entities.addAll(PositionManager.getAllInBox(entity.getBoundingBox(), pos));
+        for (final Direction dir : Direction.values()) {
+            if (dir.getAxis().isHorizontal()) {
+                final BlockPos pos2 = pos.add(dir.getVector());
+                final List<Entity> box = HoleManager.mc.world.getOtherEntities((Entity)null, new Box(pos2)).stream().filter(e -> !this.isEntityBlockingSurround(e)).toList();
+                if (!box.isEmpty()) {
+                    for (final Entity entity : box) {
+                        entities.addAll(PositionManager.getAllInBox(entity.getBoundingBox(), pos));
+                    }
+                }
             }
         }
         return entities;
     }
-
-    public boolean isEntityBlockingSurround(Entity entity) {
+    
+    public boolean isEntityBlockingSurround(final Entity entity) {
         return entity instanceof ItemEntity || entity instanceof ExperienceOrbEntity || entity instanceof EndCrystalEntity;
     }
-
-    public static List<BlockPos> getEntitySurroundNoSupport(Entity entity) {
-        List<BlockPos> entities = HoleManager.getSurroundEntities(entity);
-        CopyOnWriteArrayList<BlockPos> blocks = new CopyOnWriteArrayList<BlockPos>();
-        for (BlockPos epos : entities) {
-            for (Direction dir2 : Direction.values()) {
-                double dist;
-                BlockPos pos2;
-                if (!dir2.getAxis().isHorizontal() || entities.contains(pos2 = epos.add(dir2.getVector())) || blocks.contains(pos2) || (dist = HoleManager.mc.player.squaredDistanceTo(pos2.toCenterPos())) > 16.0) continue;
-                blocks.add(pos2);
+    
+    public static List<BlockPos> getEntitySurroundNoSupport(final Entity entity) {
+        final List<BlockPos> entities = getSurroundEntities(entity);
+        final List<BlockPos> blocks = new CopyOnWriteArrayList<BlockPos>();
+        for (final BlockPos epos : entities) {
+            for (final Direction dir2 : Direction.values()) {
+                if (dir2.getAxis().isHorizontal()) {
+                    final BlockPos pos2 = epos.add(dir2.getVector());
+                    if (!entities.contains(pos2) && !blocks.contains(pos2)) {
+                        final double dist = HoleManager.mc.player.squaredDistanceTo(pos2.toCenterPos());
+                        if (dist <= 16.0) {
+                            blocks.add(pos2);
+                        }
+                    }
+                }
             }
         }
         return blocks;
     }
-
-    private record Hole(BlockPos pos, HoleType holeType) {
-    }
-
-    private static enum HoleType {
-        BEDROCK,
+    
+    record Hole(BlockPos pos, HoleType holeType) {}
+    
+    private enum HoleType
+    {
+        BEDROCK, 
         UNSAFE;
-
     }
 }

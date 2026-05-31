@@ -1,57 +1,65 @@
 package me.twerknation28.moonlight.features.commands.impl;
 
-import me.twerknation28.moonlight.Moonlight;
-import me.twerknation28.moonlight.features.commands.Command;
+import java.util.Iterator;
 import me.twerknation28.moonlight.manager.FriendManager;
 import net.minecraft.util.Formatting;
+import me.twerknation28.moonlight.Moonlight;
+import me.twerknation28.moonlight.features.commands.Command;
 
-public class FriendCommand
-extends Command {
+public class FriendCommand extends Command
+{
     public FriendCommand() {
-        super("friend", new String[]{"<add/del/name/clear>", "<name>"});
+        super("friend", new String[] { "<add/del/name/clear>", "<name>" });
     }
-
+    
     @Override
-    public void execute(String[] commands) {
+    public void execute(final String[] commands) {
         if (commands.length == 1) {
             if (Moonlight.friendManager.getFriends().isEmpty()) {
-                FriendCommand.sendMessage("Friend list empty D:.");
-            } else {
-                StringBuilder f = new StringBuilder("Friends: ");
-                for (String friend : Moonlight.friendManager.getFriends()) {
+                Command.sendMessage("Friend list empty D:.");
+            }
+            else {
+                final StringBuilder f = new StringBuilder("Friends: ");
+                for (final String friend : Moonlight.friendManager.getFriends()) {
                     try {
                         f.append(friend).append(", ");
                     }
-                    catch (Exception exception) {}
+                    catch (final Exception ex) {}
                 }
-                FriendCommand.sendMessage(f.toString());
+                Command.sendMessage(f.toString());
             }
             return;
         }
-        if (commands.length == 2) {
-            if (commands[0].equals("reset")) {
-                Moonlight.friendManager.getFriends().clear();
-                FriendCommand.sendMessage("Friends got reset.");
-                return;
+        if (commands.length != 2) {
+            if (commands.length >= 2) {
+                final String s = commands[0];
+                switch (s) {
+                    case "add": {
+                        Moonlight.friendManager.addFriend(commands[1]);
+                        Command.sendMessage(String.valueOf(Formatting.GREEN) + commands[1] + " has been friended");
+                        return;
+                    }
+                    case "del":
+                    case "remove": {
+                        Moonlight.friendManager.removeFriend(commands[1]);
+                        Command.sendMessage(String.valueOf(Formatting.RED) + commands[1] + " has been unfriended");
+                        return;
+                    }
+                    default: {
+                        Command.sendMessage("Unknown Command, try friend add/del (name)");
+                        break;
+                    }
+                }
             }
-            FriendCommand.sendMessage(commands[0] + (FriendManager.isFriend(commands[0]) ? " is friended." : " isn't friended."));
             return;
         }
-        if (commands.length >= 2) {
-            switch (commands[0]) {
-                case "add": {
-                    Moonlight.friendManager.addFriend(commands[1]);
-                    FriendCommand.sendMessage(String.valueOf(Formatting.GREEN) + commands[1] + " has been friended");
-                    return;
-                }
-                case "del": 
-                case "remove": {
-                    Moonlight.friendManager.removeFriend(commands[1]);
-                    FriendCommand.sendMessage(String.valueOf(Formatting.RED) + commands[1] + " has been unfriended");
-                    return;
-                }
-            }
-            FriendCommand.sendMessage("Unknown Command, try friend add/del (name)");
+        if (commands[0].equals("reset")) {
+            Moonlight.friendManager.getFriends().clear();
+            Command.sendMessage("Friends got reset.");
+            return;
         }
+        final String s2 = commands[0];
+        final FriendManager friendManager = Moonlight.friendManager;
+        Command.sendMessage(s2 + (FriendManager.isFriend(commands[0]) ? " is friended." : " isn't friended."));
     }
 }

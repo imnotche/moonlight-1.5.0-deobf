@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(value={ChatHud.class})
 public abstract class MixinChatHud
-implements AngelChat {
+        implements AngelChat {
     @Final
     @Shadow
     private List<ChatHudLine> messages = Lists.newArrayList();

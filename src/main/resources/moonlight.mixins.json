@@ -1,14 +1,41 @@
 {
 	"required": true,
+	"minVersion": "0.8",
 	"package": "me.twerknation28.moonlight.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"ExampleMixin"
+		"MixinClientConnection"
+	],
+	"client": [
+		"accessor.AccessorLivingEntity",
+		"accessor.AccessorClientWorld",
+		"accessor.AccessorInteractionManager",
+		"accessor.AccessorPlayerMoveC2SPacket",
+		"accessor.AccessorChatHud",
+		"accessor.AccessorChatScreen",
+		"accessor.AccessorChatHudLine",
+		"MixinChatHud",
+		"MixinTitleScreen",
+		"MixinClientPlayerEntity",
+		"MixinClientPlayNetworkHandler",
+		"MixinInGameHud",
+		"MixinKeyboard",
+		"MixinRenderTickCounter",
+		"MixinWorldRenderer",
+		"MixinLightmapTextureManager",
+		"MixinTextVisitFactory",
+		"MixinStatusEffectInstance",
+		"MixinParticleManager",
+		"MixinEntity",
+		"MixinEntityRenderer",
+		"MixinLivingEntity",
+		"MixinInGameOverlayRenderer",
+		"MixinMinecraftClient",
+		"MixinClientPlayerInteractionManager",
+		"MixinToastManager"
 	],
 	"injectors": {
 		"defaultRequire": 1
 	},
-	"overwrites": {
-		"requireAnnotations": true
-	}
+	"refmap": "moonlight-refmap.json"
 }

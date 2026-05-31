@@ -1,17 +1,17 @@
 package me.twerknation28.moonlight.features.commands.impl;
 
 import me.twerknation28.moonlight.Moonlight;
-import me.twerknation28.moonlight.features.commands.Command;
 import net.minecraft.util.Formatting;
+import me.twerknation28.moonlight.features.commands.Command;
 
-public class PrefixCommand
-extends Command {
+public class PrefixCommand extends Command
+{
     public PrefixCommand() {
-        super("prefix", new String[]{"<char>"});
+        super("prefix", new String[] { "<char>" });
     }
-
+    
     @Override
-    public void execute(String[] commands) {
+    public void execute(final String[] commands) {
         if (commands.length == 1) {
             Command.sendMessage(String.valueOf(Formatting.GREEN) + "Current prefix is " + Moonlight.commandManager.getPrefix());
             return;

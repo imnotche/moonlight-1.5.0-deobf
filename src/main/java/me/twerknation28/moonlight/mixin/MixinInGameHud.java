@@ -1,34 +1,35 @@
 package me.twerknation28.moonlight.mixin;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import me.twerknation28.moonlight.event.impl.Render2DEvent;
-import me.twerknation28.moonlight.util.Util;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.hud.InGameHud;
-import net.minecraft.client.render.RenderTickCounter;
-import org.lwjgl.opengl.GL11;
-import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import me.twerknation28.moonlight.util.Util;
+import me.twerknation28.moonlight.event.impl.Render2DEvent;
+import org.lwjgl.opengl.GL11;
+import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.client.render.RenderTickCounter;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.hud.InGameHud;
+import org.spongepowered.asm.mixin.Mixin;
 
-@Mixin(value={InGameHud.class})
-public class MixinInGameHud {
-    @Inject(method={"render"}, at={@At(value="RETURN")})
-    public void render(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+@Mixin({ InGameHud.class })
+public class MixinInGameHud
+{
+    @Inject(method = { "render" }, at = { @At("RETURN") })
+    public void render(final DrawContext context, final RenderTickCounter tickCounter, final CallbackInfo ci) {
         if (MinecraftClient.getInstance().inGameHud.getDebugHud().shouldShowDebugHud()) {
             return;
         }
-        RenderSystem.setShaderColor((float)1.0f, (float)1.0f, (float)1.0f, (float)1.0f);
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.disableDepthTest();
         RenderSystem.enableBlend();
-        RenderSystem.blendFunc((int)770, (int)771);
+        RenderSystem.blendFunc(770, 771);
         RenderSystem.disableCull();
-        GL11.glEnable((int)2848);
-        Render2DEvent event = new Render2DEvent(context, tickCounter.getTickDelta(true));
+        GL11.glEnable(2848);
+        final Render2DEvent event = new Render2DEvent(context, tickCounter.getTickDelta(true));
         Util.EVENT_BUS.post(event);
         RenderSystem.enableDepthTest();
-        GL11.glDisable((int)2848);
+        GL11.glDisable(2848);
     }
 }

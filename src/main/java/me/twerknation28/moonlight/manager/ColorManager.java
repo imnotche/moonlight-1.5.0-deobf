@@ -1,77 +1,86 @@
 package me.twerknation28.moonlight.manager;
 
-import java.awt.Color;
-import me.twerknation28.moonlight.features.modules.client.NewGui;
 import me.twerknation28.moonlight.util.ColorUtil;
+import me.twerknation28.moonlight.features.modules.client.NewGui;
+import java.awt.Color;
 
-public class ColorManager {
-    private float red = 1.0f;
-    private float green = 1.0f;
-    private float blue = 1.0f;
-    private float alpha = 1.0f;
-    private Color color = new Color(this.red, this.green, this.blue, this.alpha);
-
+public class ColorManager
+{
+    private float red;
+    private float green;
+    private float blue;
+    private float alpha;
+    private Color color;
+    
+    public ColorManager() {
+        this.red = 1.0f;
+        this.green = 1.0f;
+        this.blue = 1.0f;
+        this.alpha = 1.0f;
+        this.color = new Color(this.red, this.green, this.blue, this.alpha);
+    }
+    
     public void init() {
-        NewGui ui = NewGui.getInstance();
+        final NewGui ui = NewGui.getInstance();
         this.setColor(ui.red.getValue(), ui.green.getValue(), ui.blue.getValue(), 255);
     }
-
+    
     public Color getColor() {
         return this.color;
     }
-
-    public void setColor(Color color) {
+    
+    public void setColor(final Color color) {
         this.color = color;
     }
-
+    
     public int getColorAsInt() {
         return ColorUtil.toRGBA(this.color);
     }
-
+    
     public int getColorAsIntFullAlpha() {
         return ColorUtil.toRGBA(new Color(this.color.getRed(), this.color.getGreen(), this.color.getBlue(), 255));
     }
-
-    public int getColorWithAlpha(int alpha) {
-        return ColorUtil.toRGBA(new Color(this.red, this.green, this.blue, (float)alpha / 255.0f));
+    
+    public int getColorWithAlpha(final int alpha) {
+        return ColorUtil.toRGBA(new Color(this.red, this.green, this.blue, alpha / 255.0f));
     }
-
-    public void setColor(float red, float green, float blue, float alpha) {
+    
+    public void setColor(final float red, final float green, final float blue, final float alpha) {
         this.red = red;
         this.green = green;
         this.blue = blue;
         this.alpha = alpha;
         this.updateColor();
     }
-
+    
     public void updateColor() {
         this.setColor(new Color(this.red, this.green, this.blue, this.alpha));
     }
-
-    public void setColor(int red, int green, int blue, int alpha) {
-        this.red = (float)red / 255.0f;
-        this.green = (float)green / 255.0f;
-        this.blue = (float)blue / 255.0f;
-        this.alpha = (float)alpha / 255.0f;
+    
+    public void setColor(final int red, final int green, final int blue, final int alpha) {
+        this.red = red / 255.0f;
+        this.green = green / 255.0f;
+        this.blue = blue / 255.0f;
+        this.alpha = alpha / 255.0f;
         this.updateColor();
     }
-
-    public void setRed(float red) {
+    
+    public void setRed(final float red) {
         this.red = red;
         this.updateColor();
     }
-
-    public void setGreen(float green) {
+    
+    public void setGreen(final float green) {
         this.green = green;
         this.updateColor();
     }
-
-    public void setBlue(float blue) {
+    
+    public void setBlue(final float blue) {
         this.blue = blue;
         this.updateColor();
     }
-
-    public void setAlpha(float alpha) {
+    
+    public void setAlpha(final float alpha) {
         this.alpha = alpha;
         this.updateColor();
     }

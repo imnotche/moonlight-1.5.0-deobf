@@ -1,41 +1,44 @@
 package me.twerknation28.moonlight.features.modules.render;
 
+import java.util.Iterator;
 import com.google.common.eventbus.Subscribe;
-import me.twerknation28.moonlight.event.impl.Render2DEvent;
 import me.twerknation28.moonlight.event.impl.RenderLabelEvent;
-import me.twerknation28.moonlight.features.api.Category;
-import me.twerknation28.moonlight.features.modules.Module;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.client.render.Camera;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Vec3d;
+import me.twerknation28.moonlight.event.impl.Render2DEvent;
+import me.twerknation28.moonlight.features.api.Category;
+import me.twerknation28.moonlight.features.modules.Module;
 
-public class Nametags
-extends Module {
+public class Nametags extends Module
+{
     public Nametags() {
         super("Nametags", "Shows additional information above the players", Category.RENDER, true, false, false);
     }
-
-    private void render(Render2DEvent event, PlayerEntity entity) {
-        float distance = entity.distanceTo((Entity)Nametags.mc.player);
-        Camera camera = Nametags.mc.gameRenderer.getCamera();
-        Vec3d cameraPos = camera.getPos();
-        Vec3d entityPos = entity.getPos();
-        float size = 0.025f;
+    
+    private void render(final Render2DEvent event, final PlayerEntity entity) {
+        final float distance = entity.distanceTo((Entity)Nametags.mc.player);
+        final Camera camera = Nametags.mc.gameRenderer.getCamera();
+        final Vec3d cameraPos = camera.getPos();
+        final Vec3d entityPos = entity.getPos();
+        final float size = 0.025f;
     }
-
+    
     @Subscribe
-    public void onRenderLabel(RenderLabelEvent event) {
+    public void onRenderLabel(final RenderLabelEvent event) {
         if (this.isDisabled()) {
             return;
         }
         event.cancel();
     }
-
+    
     @Override
-    public void onRender2D(Render2DEvent event) {
-        for (PlayerEntity player : Nametags.mc.world.getPlayers()) {
-            if (player == Nametags.mc.player) continue;
+    public void onRender2D(final Render2DEvent event) {
+        for (final PlayerEntity player : Nametags.mc.world.getPlayers()) {
+            if (player == Nametags.mc.player) {
+                continue;
+            }
             this.render(event, player);
         }
     }

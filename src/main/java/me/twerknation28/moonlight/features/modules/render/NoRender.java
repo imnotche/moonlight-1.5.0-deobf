@@ -1,31 +1,40 @@
 package me.twerknation28.moonlight.features.modules.render;
 
 import me.twerknation28.moonlight.features.api.Category;
-import me.twerknation28.moonlight.features.modules.Module;
 import me.twerknation28.moonlight.features.settings.Setting;
+import me.twerknation28.moonlight.features.modules.Module;
 
-public class NoRender
-extends Module {
-    private static NoRender INSTANCE = new NoRender();
-    public Setting<Boolean> potionHUD = this.register(new Setting<Boolean>("PotionHUD", false));
-    public Setting<Boolean> fireOverlay = this.register(new Setting<Boolean>("FireOverlay", false));
-    public Setting<Boolean> uglyParticles = this.register(new Setting<Boolean>("UglyParticles", false));
-    public Setting<Boolean> toasts = this.register(new Setting<Boolean>("Toasts", false));
-    public Setting<Boolean> glow = this.register(new Setting<Boolean>("Glow", false));
-
+public class NoRender extends Module
+{
+    private static NoRender INSTANCE;
+    public Setting<Boolean> potionHUD;
+    public Setting<Boolean> fireOverlay;
+    public Setting<Boolean> uglyParticles;
+    public Setting<Boolean> toasts;
+    public Setting<Boolean> glow;
+    
     public NoRender() {
         super("NoRender", "Makes ur game look swag", Category.RENDER, true, false, false);
+        this.potionHUD = this.register(new Setting<Boolean>("PotionHUD", false));
+        this.fireOverlay = this.register(new Setting<Boolean>("FireOverlay", false));
+        this.uglyParticles = this.register(new Setting<Boolean>("UglyParticles", false));
+        this.toasts = this.register(new Setting<Boolean>("Toasts", false));
+        this.glow = this.register(new Setting<Boolean>("Glow", false));
         this.setInstance();
     }
-
+    
     public static NoRender getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new NoRender();
+        if (NoRender.INSTANCE == null) {
+            NoRender.INSTANCE = new NoRender();
         }
-        return INSTANCE;
+        return NoRender.INSTANCE;
     }
-
+    
     private void setInstance() {
-        INSTANCE = this;
+        NoRender.INSTANCE = this;
+    }
+    
+    static {
+        NoRender.INSTANCE = new NoRender();
     }
 }

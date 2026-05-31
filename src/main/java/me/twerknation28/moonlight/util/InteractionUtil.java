@@ -33,7 +33,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
 public class InteractionUtil
-implements Util {
+        implements Util {
     public static boolean canBreak(BlockPos blockPos, BlockState state) {
         if (!InteractionUtil.mc.player.isCreative() && state.getHardness((BlockView)InteractionUtil.mc.world, blockPos) < 0.0f) {
             return false;

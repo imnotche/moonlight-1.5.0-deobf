@@ -1,47 +1,47 @@
 package me.twerknation28.moonlight.features.clickgui.buttons;
 
-import me.twerknation28.moonlight.features.clickgui.BaseButton;
-import me.twerknation28.moonlight.features.clickgui.Window;
-import me.twerknation28.moonlight.features.clickgui.buttons.Button;
-import me.twerknation28.moonlight.features.modules.client.NewGui;
-import me.twerknation28.moonlight.features.settings.Bind;
-import me.twerknation28.moonlight.util.ColorUtil;
 import me.twerknation28.moonlight.util.FontUtil;
+import me.twerknation28.moonlight.util.ColorUtil;
+import me.twerknation28.moonlight.features.modules.client.NewGui;
 import me.twerknation28.moonlight.util.RenderUtil;
-import me.twerknation28.moonlight.util.Util;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.sound.PositionedSoundInstance;
+import me.twerknation28.moonlight.features.settings.Bind;
 import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.sound.SoundEvents;
+import me.twerknation28.moonlight.util.Util;
+import me.twerknation28.moonlight.features.clickgui.Window;
+import me.twerknation28.moonlight.features.clickgui.BaseButton;
 
-public class SubBind
-extends BaseButton {
+public class SubBind extends BaseButton
+{
     private final Button parent;
     private final Window window;
-    private boolean accepting = false;
-
-    public SubBind(Button parent) {
+    private boolean accepting;
+    
+    public SubBind(final Button parent) {
         super(parent.getWindow().getX() + 4, parent.getY() + 4, parent.getWindow().getWidth() - 7, 14);
+        this.accepting = false;
         parent.getSubEntries().add(this);
         this.parent = parent;
         this.window = parent.getWindow();
     }
-
+    
     @Override
-    public void processMouseClick(int mouseX, int mouseY, int button) {
+    public void processMouseClick(final int mouseX, final int mouseY, final int button) {
         this.updateIsMouseHovered(mouseX, mouseY);
         if (!this.isMouseHovered()) {
             return;
         }
         if (button == 0) {
             this.accepting = true;
-            Util.mc.getSoundManager().play((SoundInstance)PositionedSoundInstance.master((RegistryEntry)SoundEvents.UI_BUTTON_CLICK, (float)1.0f));
+            Util.mc.getSoundManager().play((SoundInstance)PositionedSoundInstance.master((RegistryEntry)SoundEvents.UI_BUTTON_CLICK, 1.0f));
         }
     }
-
+    
     @Override
-    public void processKeyPress(char character, int key) {
+    public void processKeyPress(final char character, final int key) {
         if (!this.accepting) {
             return;
         }
@@ -52,20 +52,20 @@ extends BaseButton {
         this.parent.getModule().bind.setValue(bind);
         this.accepting = false;
     }
-
+    
     @Override
-    public void draw(DrawContext context, int mouseX, int mouseY) {
+    public void draw(final DrawContext context, final int mouseX, final int mouseY) {
         String str = this.parent.getModule().getBind().toString().toUpperCase();
         str = str.replace("KEY.KEYBOARD", "").replace(".", " ");
-        Object keyName = this.accepting ? "Press a key..." : "bind: " + str;
+        final String keyName = this.accepting ? "Press a key..." : ("bind: " + str);
         this.y = this.window.getRenderYButton();
         this.x = this.window.getX() + 4;
         this.updateIsMouseHovered(mouseX, mouseY);
-        RenderUtil.rect(context.getMatrices(), this.getX(), this.getY(), this.getWidth() + this.getX(), this.getHeight() + this.getY(), this.getColor());
-        RenderUtil.rect(context.getMatrices(), this.getX(), this.getY(), -1 + this.getX(), this.getHeight() + this.getY(), ColorUtil.toARGB(NewGui.getInstance().red.getValue(), NewGui.getInstance().green.getValue(), NewGui.getInstance().blue.getValue(), 255));
-        FontUtil.drawStringWithShadow(((String)keyName).toLowerCase(), this.getX() + 2, this.getY() + 3, -1, context);
+        RenderUtil.rect(context.getMatrices(), (float)this.getX(), (float)this.getY(), (float)(this.getWidth() + this.getX()), (float)(this.getHeight() + this.getY()), this.getColor());
+        RenderUtil.rect(context.getMatrices(), (float)this.getX(), (float)this.getY(), (float)(-1 + this.getX()), (float)(this.getHeight() + this.getY()), ColorUtil.toARGB(NewGui.getInstance().red.getValue(), NewGui.getInstance().green.getValue(), NewGui.getInstance().blue.getValue(), 255));
+        FontUtil.drawStringWithShadow(keyName.toLowerCase(), this.getX() + 2, this.getY() + 3, -1, context);
     }
-
+    
     @Override
     public int getColor() {
         if (!this.isMouseHovered()) {
@@ -73,12 +73,12 @@ extends BaseButton {
         }
         return ColorUtil.toARGB(150, 150, 150, 50);
     }
-
+    
     @Override
     public boolean shouldRender() {
         return this.parent.isOpen() && this.parent.shouldRender();
     }
-
+    
     public Button getParent() {
         return this.parent;
     }

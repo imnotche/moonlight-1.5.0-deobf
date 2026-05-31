@@ -1,13 +1,12 @@
 package me.twerknation28.moonlight.features.settings;
 
-import java.util.function.Predicate;
+import me.twerknation28.moonlight.util.Util;
 import me.twerknation28.moonlight.event.impl.ClientEvent;
 import me.twerknation28.moonlight.features.Feature;
-import me.twerknation28.moonlight.features.settings.Bind;
-import me.twerknation28.moonlight.features.settings.EnumConverter;
-import me.twerknation28.moonlight.util.Util;
+import java.util.function.Predicate;
 
-public class Setting<T> {
+public class Setting<T>
+{
     private final String name;
     private final T defaultValue;
     private T value;
@@ -19,24 +18,24 @@ public class Setting<T> {
     private Predicate<T> visibility;
     private String description;
     private Feature feature;
-
-    public Setting(String name, T defaultValue) {
+    
+    public Setting(final String name, final T defaultValue) {
         this.name = name;
         this.defaultValue = defaultValue;
         this.value = defaultValue;
         this.plannedValue = defaultValue;
         this.description = "";
     }
-
-    public Setting(String name, T defaultValue, String description) {
+    
+    public Setting(final String name, final T defaultValue, final String description) {
         this.name = name;
         this.defaultValue = defaultValue;
         this.value = defaultValue;
         this.plannedValue = defaultValue;
         this.description = description;
     }
-
-    public Setting(String name, T defaultValue, T min, T max, T inc, String description) {
+    
+    public Setting(final String name, final T defaultValue, final T min, final T max, final T inc, final String description) {
         this.name = name;
         this.defaultValue = defaultValue;
         this.value = defaultValue;
@@ -47,8 +46,8 @@ public class Setting<T> {
         this.description = description;
         this.hasRestriction = true;
     }
-
-    public Setting(String name, T defaultValue, T min, T max, T inc) {
+    
+    public Setting(final String name, final T defaultValue, final T min, final T max, final T inc) {
         this.name = name;
         this.defaultValue = defaultValue;
         this.value = defaultValue;
@@ -59,8 +58,8 @@ public class Setting<T> {
         this.description = "";
         this.hasRestriction = true;
     }
-
-    public Setting(String name, T defaultValue, T min, T max, T inc, Predicate<T> visibility, String description) {
+    
+    public Setting(final String name, final T defaultValue, final T min, final T max, final T inc, final Predicate<T> visibility, final String description) {
         this.name = name;
         this.defaultValue = defaultValue;
         this.value = defaultValue;
@@ -72,8 +71,8 @@ public class Setting<T> {
         this.description = description;
         this.hasRestriction = true;
     }
-
-    public Setting(String name, T defaultValue, T min, T max, T inc, Predicate<T> visibility) {
+    
+    public Setting(final String name, final T defaultValue, final T min, final T max, final T inc, final Predicate<T> visibility) {
         this.name = name;
         this.defaultValue = defaultValue;
         this.value = defaultValue;
@@ -85,24 +84,24 @@ public class Setting<T> {
         this.description = "";
         this.hasRestriction = true;
     }
-
-    public Setting(String name, T defaultValue, Predicate<T> visibility) {
+    
+    public Setting(final String name, final T defaultValue, final Predicate<T> visibility) {
         this.name = name;
         this.defaultValue = defaultValue;
         this.value = defaultValue;
         this.visibility = visibility;
         this.plannedValue = defaultValue;
     }
-
+    
     public String getName() {
         return this.name;
     }
-
+    
     public T getValue() {
         return this.value;
     }
-
-    public void setValue(T value) {
+    
+    public void setValue(final T value) {
         this.setPlannedValue(value);
         if (this.hasRestriction) {
             if (((Number)this.min).floatValue() > ((Number)value).floatValue()) {
@@ -112,48 +111,49 @@ public class Setting<T> {
                 this.setPlannedValue(this.max);
             }
         }
-        ClientEvent event = new ClientEvent(this);
+        final ClientEvent event = new ClientEvent(this);
         Util.EVENT_BUS.post(event);
         if (!event.isCancelled()) {
             this.value = this.plannedValue;
-        } else {
+        }
+        else {
             this.plannedValue = this.value;
         }
     }
-
+    
     public void reset() {
         this.setValue(this.getDefaultValue());
     }
-
+    
     public T getPlannedValue() {
         return this.plannedValue;
     }
-
-    public void setPlannedValue(T value) {
+    
+    public void setPlannedValue(final T value) {
         this.plannedValue = value;
     }
-
+    
     public T getMin() {
         return this.min;
     }
-
+    
     public T getInc() {
         return this.inc;
     }
-
-    public void setMin(T min) {
+    
+    public void setMin(final T min) {
         this.min = min;
     }
-
+    
     public T getMax() {
         return this.max;
     }
-
-    public void setMax(T max) {
+    
+    public void setMax(final T max) {
         this.max = max;
     }
-
-    public void setValueNoEvent(T value) {
+    
+    public void setValueNoEvent(final T value) {
         this.setPlannedValue(value);
         if (this.hasRestriction) {
             if (((Number)this.min).floatValue() > ((Number)value).floatValue()) {
@@ -165,104 +165,104 @@ public class Setting<T> {
         }
         this.value = this.plannedValue;
     }
-
+    
     public Feature getFeature() {
         return this.feature;
     }
-
-    public void setFeature(Feature feature) {
+    
+    public void setFeature(final Feature feature) {
         this.feature = feature;
     }
-
-    public int getEnum(String input) {
+    
+    public int getEnum(final String input) {
         for (int i = 0; i < this.value.getClass().getEnumConstants().length; ++i) {
-            Enum e = (Enum)this.value.getClass().getEnumConstants()[i];
-            if (!e.name().equalsIgnoreCase(input)) continue;
-            return i;
+            final Enum e = (Enum)this.value.getClass().getEnumConstants()[i];
+            if (e.name().equalsIgnoreCase(input)) {
+                return i;
+            }
         }
         return -1;
     }
-
-    public void setEnumValue(String value) {
-        for (Enum e : (Enum[])((Enum)this.value).getClass().getEnumConstants()) {
-            if (!e.name().equalsIgnoreCase(value)) continue;
-            this.value = e;
+    
+    public void setEnumValue(final String value) {
+        for (final Enum e : (Enum[])this.value.getClass().getEnumConstants()) {
+            if (e.name().equalsIgnoreCase(value)) {
+                this.value = (T)e;
+            }
         }
     }
-
+    
     public String currentEnumName() {
         return EnumConverter.getProperName((Enum)this.value);
     }
-
+    
     public int currentEnum() {
         return EnumConverter.currentEnum((Enum)this.value);
     }
-
+    
     public void increaseEnum() {
-        this.plannedValue = EnumConverter.increaseEnum((Enum)this.value);
-        ClientEvent event = new ClientEvent(this);
+        this.plannedValue = (T)EnumConverter.increaseEnum((Enum)this.value);
+        final ClientEvent event = new ClientEvent(this);
         Util.EVENT_BUS.post(event);
         if (!event.isCancelled()) {
             this.value = this.plannedValue;
-        } else {
+        }
+        else {
             this.plannedValue = this.value;
         }
     }
-
+    
     public void increaseEnumNoEvent() {
-        this.value = EnumConverter.increaseEnum((Enum)this.value);
+        this.value = (T)EnumConverter.increaseEnum((Enum)this.value);
     }
-
+    
     public String getType() {
         if (this.isEnumSetting()) {
             return "Enum";
         }
         return this.getClassName(this.defaultValue);
     }
-
-    public <T> String getClassName(T value) {
+    
+    public <T> String getClassName(final T value) {
         return value.getClass().getSimpleName();
     }
-
+    
     public String getDescription() {
         if (this.description == null) {
             return "";
         }
         return this.description;
     }
-
+    
     public boolean isNumberSetting() {
         return this.value instanceof Double || this.value instanceof Integer || this.value instanceof Short || this.value instanceof Long || this.value instanceof Float;
     }
-
+    
     public boolean isEnumSetting() {
         return !this.isNumberSetting() && !(this.value instanceof String) && !(this.value instanceof Bind) && !(this.value instanceof Character) && !(this.value instanceof Boolean);
     }
-
+    
     public boolean isStringSetting() {
         return this.value instanceof String;
     }
-
+    
     public T getDefaultValue() {
         return this.defaultValue;
     }
-
+    
     public String getValueAsString() {
         return this.value.toString();
     }
-
+    
     public boolean hasRestriction() {
         return this.hasRestriction;
     }
-
-    public void setVisibility(Predicate<T> visibility) {
+    
+    public void setVisibility(final Predicate<T> visibility) {
         this.visibility = visibility;
     }
-
+    
     public boolean isVisible() {
-        if (this.visibility == null) {
-            return true;
-        }
-        return this.visibility.test(this.getValue());
+        return this.visibility == null || this.visibility.test(this.getValue());
     }
 }

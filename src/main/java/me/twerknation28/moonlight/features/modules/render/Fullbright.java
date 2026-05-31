@@ -3,23 +3,27 @@ package me.twerknation28.moonlight.features.modules.render;
 import me.twerknation28.moonlight.features.api.Category;
 import me.twerknation28.moonlight.features.modules.Module;
 
-public class Fullbright
-extends Module {
-    private static Fullbright INSTANCE = new Fullbright();
-
+public class Fullbright extends Module
+{
+    private static Fullbright INSTANCE;
+    
     public Fullbright() {
         super("Fullbright", "Fully brightens", Category.RENDER, true, false, false);
         this.setInstance();
     }
-
+    
     public static Fullbright getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new Fullbright();
+        if (Fullbright.INSTANCE == null) {
+            Fullbright.INSTANCE = new Fullbright();
         }
-        return INSTANCE;
+        return Fullbright.INSTANCE;
     }
-
+    
     private void setInstance() {
-        INSTANCE = this;
+        Fullbright.INSTANCE = this;
+    }
+    
+    static {
+        Fullbright.INSTANCE = new Fullbright();
     }
 }

@@ -42,8 +42,8 @@ import me.twerknation28.moonlight.util.Util;
 import me.twerknation28.moonlight.util.traits.Jsonable;
 
 public class ModuleManager
-implements Jsonable,
-Util {
+        implements Jsonable,
+        Util {
     public List<Module> modules = new ArrayList<Module>();
     public List<Module> sortedModules = new ArrayList<Module>();
     public List<String> sortedModulesABC = new ArrayList<String>();

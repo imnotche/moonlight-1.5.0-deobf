@@ -1,51 +1,51 @@
 package me.twerknation28.moonlight.features.settings;
 
-import com.google.common.base.Converter;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonElement;
+import com.google.common.base.Converter;
 
-public class EnumConverter
-extends Converter<Enum, JsonElement> {
+public class EnumConverter extends Converter<Enum, JsonElement>
+{
     private final Class<? extends Enum> clazz;
-
-    public EnumConverter(Class<? extends Enum> clazz) {
+    
+    public EnumConverter(final Class<? extends Enum> clazz) {
         this.clazz = clazz;
     }
-
-    public static int currentEnum(Enum clazz) {
+    
+    public static int currentEnum(final Enum clazz) {
         for (int i = 0; i < clazz.getDeclaringClass().getEnumConstants().length; ++i) {
-            Enum e = (Enum)clazz.getDeclaringClass().getEnumConstants()[i];
-            if (!e.name().equalsIgnoreCase(clazz.name())) continue;
-            return i;
+            final Enum e = (Enum)clazz.getDeclaringClass().getEnumConstants()[i];
+            if (e.name().equalsIgnoreCase(clazz.name())) {
+                return i;
+            }
         }
         return -1;
     }
-
-    public static Enum increaseEnum(Enum clazz) {
-        int index = EnumConverter.currentEnum(clazz);
+    
+    public static Enum increaseEnum(final Enum clazz) {
+        final int index = currentEnum(clazz);
         for (int i = 0; i < clazz.getDeclaringClass().getEnumConstants().length; ++i) {
-            Enum e = (Enum)clazz.getDeclaringClass().getEnumConstants()[i];
-            if (i != index + 1) continue;
-            return e;
+            final Enum e = (Enum)clazz.getDeclaringClass().getEnumConstants()[i];
+            if (i == index + 1) {
+                return e;
+            }
         }
         return (Enum)clazz.getDeclaringClass().getEnumConstants()[0];
     }
-
-    public static String getProperName(Enum clazz) {
+    
+    public static String getProperName(final Enum clazz) {
         return Character.toUpperCase(clazz.name().charAt(0)) + clazz.name().toLowerCase().substring(1);
     }
-
-    @Override
-    public JsonElement doForward(Enum anEnum) {
+    
+    public JsonElement doForward(final Enum anEnum) {
         return new JsonPrimitive(anEnum.toString());
     }
-
-    @Override
-    public Enum doBackward(JsonElement jsonElement) {
+    
+    public Enum doBackward(final JsonElement jsonElement) {
         try {
-            return Enum.valueOf(this.clazz, jsonElement.getAsString());
+            return (Enum)Enum.valueOf(this.clazz, jsonElement.getAsString());
         }
-        catch (IllegalArgumentException e) {
+        catch (final IllegalArgumentException e) {
             return null;
         }
     }

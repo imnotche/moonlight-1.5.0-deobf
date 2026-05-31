@@ -1,18 +1,19 @@
 package me.twerknation28.moonlight.mixin.accessor;
 
+import org.spongepowered.asm.mixin.gen.Invoker;
+import org.spongepowered.asm.mixin.gen.Accessor;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
-import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(value={ClientPlayerInteractionManager.class})
-public interface AccessorInteractionManager {
-    @Accessor(value="currentBreakingProgress")
-    public float getCurBlockDamageMP();
-
-    @Accessor(value="currentBreakingProgress")
-    public void setCurBlockDamageMP(float var1);
-
-    @Invoker(value="syncSelectedSlot")
-    public void syncSlot();
+@Mixin({ ClientPlayerInteractionManager.class })
+public interface AccessorInteractionManager
+{
+    @Accessor("currentBreakingProgress")
+    float getCurBlockDamageMP();
+    
+    @Accessor("currentBreakingProgress")
+    void setCurBlockDamageMP(final float p0);
+    
+    @Invoker("syncSelectedSlot")
+    void syncSlot();
 }

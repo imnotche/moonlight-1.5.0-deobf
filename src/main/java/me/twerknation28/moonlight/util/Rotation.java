@@ -1,46 +1,47 @@
 package me.twerknation28.moonlight.util;
 
-public class Rotation {
+public class Rotation
+{
     private final int priority;
     private float yaw;
     private float pitch;
     private boolean snap;
-
-    public Rotation(int priority, float yaw, float pitch, boolean snap) {
+    
+    public Rotation(final int priority, final float yaw, final float pitch, final boolean snap) {
         this.priority = priority;
         this.yaw = yaw;
         this.pitch = pitch;
         this.snap = snap;
     }
-
-    public Rotation(int priority, float yaw, float pitch) {
+    
+    public Rotation(final int priority, final float yaw, final float pitch) {
         this(priority, yaw, pitch, false);
     }
-
+    
     public int getPriority() {
         return this.priority;
     }
-
-    public void setYaw(float yaw) {
+    
+    public void setYaw(final float yaw) {
         this.yaw = yaw;
     }
-
-    public void setPitch(float pitch) {
+    
+    public void setPitch(final float pitch) {
         this.pitch = pitch;
     }
-
+    
     public float getYaw() {
         return this.yaw;
     }
-
+    
     public float getPitch() {
         return this.pitch;
     }
-
-    public void setSnap(boolean snap) {
+    
+    public void setSnap(final boolean snap) {
         this.snap = snap;
     }
-
+    
     public boolean isSnap() {
         return this.snap;
     }

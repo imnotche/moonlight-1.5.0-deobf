@@ -22,32 +22,53 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.Items;
 
-public class HudModule
-extends Module {
-    public Setting<colorMode> colorModeSetting = this.register(new Setting<colorMode>("Color", colorMode.GLOBAL));
-    public Setting<String> firstGradientColor = this.register(new Setting<String>("FirstGradientColor", "#FF0000", v -> this.colorModeSetting.getValue() == colorMode.CYCLE));
-    public Setting<String> secondGradientColor = this.register(new Setting<String>("SecondGradientColor", "#0000FF", v -> this.colorModeSetting.getValue() == colorMode.CYCLE));
-    public Setting<Boolean> watermark = this.register(new Setting<Boolean>("Watermark", true));
-    public Setting<Boolean> gaymark = this.register(new Setting<Boolean>("GayMark", false));
-    public Setting<Boolean> indicators = this.register(new Setting<Boolean>("Indicators", Boolean.valueOf(false), v -> this.gaymark.getValue()));
-    public Setting<Boolean> textRadar = this.register(new Setting<Boolean>("TextRadar", true));
-    public Setting<Integer> yOffset = this.register(new Setting<Integer>("Offset", 0, 0, 45, 1));
-    public Setting<Boolean> welcomer = this.register(new Setting<Boolean>("Welcomer", false));
-    public Setting<welcomerMode> mode = this.register(new Setting<Object>("Mode", (Object)welcomerMode.TIME, v -> this.welcomer.getValue()));
-    public Setting<Boolean> coords = this.register(new Setting<Boolean>("Coords", true));
-    public Setting<Boolean> info = this.register(new Setting<Boolean>("Info", true));
-    public Setting<Boolean> arrayList = this.register(new Setting<Boolean>("ArrayList", true));
-    public Setting<Boolean> ping = this.register(new Setting<Boolean>("Ping", Boolean.valueOf(true), v -> this.info.getValue()));
-    public Setting<Boolean> fps = this.register(new Setting<Boolean>("FPS", Boolean.valueOf(true), v -> this.info.getValue()));
-    public Setting<Boolean> potions = this.register(new Setting<Boolean>("Potions", Boolean.valueOf(true), v -> this.info.getValue()));
-    float gradientCount = 0.0f;
-    boolean gradientDirection = true;
-    int audioTimer = 20;
-    int REFRESH_INTERVAL = 20;
-    String songString = "";
+public class HudModule extends Module
+{
+    public Setting<colorMode> colorModeSetting;
+    public Setting<String> firstGradientColor;
+    public Setting<String> secondGradientColor;
+    public Setting<Boolean> watermark;
+    public Setting<Boolean> gaymark;
+    public Setting<Boolean> indicators;
+    public Setting<Boolean> textRadar;
+    public Setting<Integer> yOffset;
+    public Setting<Boolean> welcomer;
+    public Setting<welcomerMode> mode;
+    public Setting<Boolean> coords;
+    public Setting<Boolean> info;
+    public Setting<Boolean> arrayList;
+    public Setting<Boolean> ping;
+    public Setting<Boolean> fps;
+    public Setting<Boolean> potions;
+    float gradientCount;
+    boolean gradientDirection;
+    int audioTimer;
+    int REFRESH_INTERVAL;
+    String songString;
 
     public HudModule() {
         super("HUD", "swag", Category.CLIENT, true, false, false);
+        this.colorModeSetting = this.register(new Setting<colorMode>("Color", colorMode.GLOBAL));
+        this.firstGradientColor = this.register(new Setting<String>("FirstGradientColor", "#FF0000", v -> this.colorModeSetting.getValue() == colorMode.CYCLE));
+        this.secondGradientColor = this.register(new Setting<String>("SecondGradientColor", "#0000FF", v -> this.colorModeSetting.getValue() == colorMode.CYCLE));
+        this.watermark = this.register(new Setting<Boolean>("Watermark", true));
+        this.gaymark = this.register(new Setting<Boolean>("GayMark", false));
+        this.indicators = this.register(new Setting<Boolean>("Indicators", false, v -> this.gaymark.getValue()));
+        this.textRadar = this.register(new Setting<Boolean>("TextRadar", true));
+        this.yOffset = this.register(new Setting<Integer>("Offset", 0, 0, 45, 1));
+        this.welcomer = this.register(new Setting<Boolean>("Welcomer", false));
+        this.mode = this.register(new Setting<welcomerMode>("Mode", welcomerMode.TIME, v -> this.welcomer.getValue()));
+        this.coords = this.register(new Setting<Boolean>("Coords", true));
+        this.info = this.register(new Setting<Boolean>("Info", true));
+        this.arrayList = this.register(new Setting<Boolean>("ArrayList", true));
+        this.ping = this.register(new Setting<Boolean>("Ping", true, v -> this.info.getValue()));
+        this.fps = this.register(new Setting<Boolean>("FPS", true, v -> this.info.getValue()));
+        this.potions = this.register(new Setting<Boolean>("Potions", true, v -> this.info.getValue()));
+        this.gradientCount = 0.0f;
+        this.gradientDirection = true;
+        this.audioTimer = 20;
+        this.REFRESH_INTERVAL = 20;
+        this.songString = "";
     }
 
     @Override
@@ -168,7 +189,7 @@ extends Module {
         }
         if (this.textRadar.getValue().booleanValue()) {
             int count = 1;
-            for (Entity entity : HudModule.mc.world.getPlayers().stream().filter(e -> e != HudModule.mc.player).sorted(Comparator.comparing(arg_0 -> ((ClientPlayerEntity)HudModule.mc.player).method_5739(arg_0))).toList()) {
+            for (Entity entity : HudModule.mc.world.getPlayers().stream().filter(e -> e != HudModule.mc.player).sorted(Comparator.comparing(arg_0 -> ((ClientPlayerEntity)HudModule.mc.player).distanceTo(arg_0))).toList()) {
                 int dist = Math.round(HudModule.mc.player.distanceTo(entity));
                 event.getContext().drawTextWithShadow(HudModule.mc.textRenderer, entity.getDisplayName().getString(), 2, 11 + count * 9 + this.yOffset.getValue(), globalColor);
                 event.getContext().drawTextWithShadow(HudModule.mc.textRenderer, " " + dist + "m", 2 + HudModule.mc.textRenderer.getWidth(entity.getDisplayName().getString()), 11 + count * 9 + this.yOffset.getValue(), 0xFFFFFF);

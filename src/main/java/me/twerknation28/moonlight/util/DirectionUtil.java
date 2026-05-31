@@ -1,55 +1,59 @@
 package me.twerknation28.moonlight.util;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.Iterator;
 import net.minecraft.util.math.BlockPos;
+import java.util.Arrays;
 import net.minecraft.util.math.Direction;
+import java.util.List;
 
-public class DirectionUtil {
-    public static Boolean isCardinal(EightWayDirections dir) {
-        return dir.equals((Object)EightWayDirections.EAST) || dir.equals((Object)EightWayDirections.WEST) || dir.equals((Object)EightWayDirections.SOUTH) || dir.equals((Object)EightWayDirections.NORTH);
+public class DirectionUtil
+{
+    public static Boolean isCardinal(final EightWayDirections dir) {
+        return dir.equals(EightWayDirections.EAST) || dir.equals(EightWayDirections.WEST) || dir.equals(EightWayDirections.SOUTH) || dir.equals(EightWayDirections.NORTH);
     }
-
-    public static enum EightWayDirections {
-        NORTH(Direction.NORTH),
-        SOUTH(Direction.SOUTH),
-        EAST(Direction.EAST),
-        WEST(Direction.WEST),
-        NORTHEAST(Direction.NORTH, Direction.EAST),
-        NORTHWEST(Direction.NORTH, Direction.WEST),
-        SOUTHEAST(Direction.SOUTH, Direction.EAST),
-        SOUTHWEST(Direction.SOUTH, Direction.WEST);
-
+    
+    public enum EightWayDirections
+    {
+        NORTH(new Direction[] { Direction.NORTH }), 
+        SOUTH(new Direction[] { Direction.SOUTH }), 
+        EAST(new Direction[] { Direction.EAST }), 
+        WEST(new Direction[] { Direction.WEST }), 
+        NORTHEAST(new Direction[] { Direction.NORTH, Direction.EAST }), 
+        NORTHWEST(new Direction[] { Direction.NORTH, Direction.WEST }), 
+        SOUTHEAST(new Direction[] { Direction.SOUTH, Direction.EAST }), 
+        SOUTHWEST(new Direction[] { Direction.SOUTH, Direction.WEST });
+        
         private final List<Direction> directions;
-
-        private EightWayDirections(Direction ... directions) {
+        
+        private EightWayDirections(final Direction[] directions) {
             this.directions = Arrays.asList(directions);
         }
-
-        public BlockPos offset(BlockPos pos) {
+        
+        public BlockPos offset(final BlockPos pos) {
             BlockPos result = pos;
-            for (Direction direction : this.directions) {
+            for (final Direction direction : this.directions) {
                 result = result.offset(direction);
             }
             return result;
         }
     }
-
-    public static enum FourWayDirections {
-        NORTH(Direction.NORTH),
-        SOUTH(Direction.SOUTH),
-        EAST(Direction.EAST),
-        WEST(Direction.WEST);
-
+    
+    public enum FourWayDirections
+    {
+        NORTH(new Direction[] { Direction.NORTH }), 
+        SOUTH(new Direction[] { Direction.SOUTH }), 
+        EAST(new Direction[] { Direction.EAST }), 
+        WEST(new Direction[] { Direction.WEST });
+        
         private final List<Direction> directions;
-
-        private FourWayDirections(Direction ... directions) {
+        
+        private FourWayDirections(final Direction[] directions) {
             this.directions = Arrays.asList(directions);
         }
-
-        public BlockPos offset(BlockPos pos) {
+        
+        public BlockPos offset(final BlockPos pos) {
             BlockPos result = pos;
-            for (Direction direction : this.directions) {
+            for (final Direction direction : this.directions) {
                 result = result.offset(direction);
             }
             return result;

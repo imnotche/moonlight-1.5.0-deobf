@@ -20,7 +20,7 @@ import net.minecraft.util.math.Position;
 import net.minecraft.util.math.Vec3d;
 
 public class MathUtil
-implements Util {
+        implements Util {
     private static final DecimalFormat DECIMAL_FORMAT;
     private static final Random random;
 
