@@ -22,13 +22,13 @@ public class MixinTitleScreen extends Screen
     private String message;
     
     public MixinTitleScreen() {
-        super(Text.of("moonlight"));
+        super(Text.of(Moonlight.NAME));
         this.message = "waohack elite oh yeah";
     }
     
     @Inject(method = { "init" }, at = { @At("RETURN") })
     public void initHook(final CallbackInfo ci) {
-        final String bussin = Moonlight.NAME + Moonlight.NAME;
+        final String bussin = Moonlight.NAME + Moonlight.VERSION;
         final TextWidget textWidget = new TextWidget(Text.of(bussin + ": " + this.message), this.textRenderer);
         final int var5 = this.client.getWindow().getScaledHeight();
         Objects.requireNonNull(this.textRenderer);

@@ -27,7 +27,6 @@ public class ColorUtil
                     }
                     return toARGB(255, 255, 255, 255);
                 }
-                break;
             }
             case 1: {
                 return toARGB(255, 255, 255, 30);
@@ -51,7 +50,6 @@ public class ColorUtil
                     }
                     return BUTTON2_ON_HOV;
                 }
-                break;
             }
             case 4: {
                 if (!state) {

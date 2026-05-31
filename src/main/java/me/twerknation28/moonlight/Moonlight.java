@@ -3,7 +3,6 @@ package me.twerknation28.moonlight;
 import java.util.ArrayList;
 import net.minecraft.util.Identifier;
 import java.util.List;
-import java.util.logging.LogManager;
 
 import me.twerknation28.moonlight.manager.ConfigManager;
 import me.twerknation28.moonlight.manager.ModuleManager;
@@ -18,14 +17,15 @@ import me.twerknation28.moonlight.manager.ColorManager;
 import me.twerknation28.moonlight.manager.ServerManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
-import org.slf4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Moonlight implements ModInitializer, ClientModInitializer
 {
     public static final String NAME = "moonlight";
     public static final String VERSION = "1.5.0-beta";
     public static float TIMER;
-    public static final Logger LOGGER;
+    public static final Logger LOGGER = LogManager.getLogger(NAME);
     public static ServerManager serverManager;
     public static ColorManager colorManager;
     public static RotationManager rotationManager;
@@ -62,7 +62,6 @@ public class Moonlight implements ModInitializer, ClientModInitializer
     
     static {
         Moonlight.TIMER = 1.0f;
-        LOGGER = (Logger) java.util.logging.Logger.getLogger("moonlight");
         Moonlight.images = new ArrayList<Identifier>();
     }
 }

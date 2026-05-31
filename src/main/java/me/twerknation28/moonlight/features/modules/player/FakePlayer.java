@@ -1,5 +1,6 @@
 package me.twerknation28.moonlight.features.modules.player;
 
+import me.twerknation28.moonlight.Moonlight;
 import me.twerknation28.moonlight.event.impl.PushEntityEvent;
 import com.google.common.eventbus.Subscribe;
 import me.twerknation28.moonlight.event.impl.DisconnectEvent;
@@ -19,7 +20,7 @@ public class FakePlayer extends Module
     @Override
     public void onEnable() {
         if (FakePlayer.mc.player != null && FakePlayer.mc.world != null) {
-            (this.fakePlayer = new FakePlayerEntity((PlayerEntity)FakePlayer.mc.player, "moonlight")).spawnPlayer();
+            (this.fakePlayer = new FakePlayerEntity((PlayerEntity)FakePlayer.mc.player, Moonlight.NAME)).spawnPlayer();
         }
     }
     

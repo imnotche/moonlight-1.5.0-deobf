@@ -106,9 +106,9 @@ public class HudModule extends Module
             }
         }
         if (this.watermark.getValue().booleanValue()) {
-            event.getContext().drawTextWithShadow(HudModule.mc.textRenderer, "moonlight", 2, 2 + this.yOffset.getValue(), globalColor);
-            int firstWordWidth = HudModule.mc.textRenderer.getWidth("moonlight");
-            event.getContext().drawTextWithShadow(HudModule.mc.textRenderer, " 1.5.0-beta", 2 + firstWordWidth, 2 + this.yOffset.getValue(), 0xFFFFFF);
+            event.getContext().drawTextWithShadow(HudModule.mc.textRenderer, Moonlight.NAME, 2, 2 + this.yOffset.getValue(), globalColor);
+            int firstWordWidth = HudModule.mc.textRenderer.getWidth(Moonlight.NAME);
+            event.getContext().drawTextWithShadow(HudModule.mc.textRenderer, Moonlight.VERSION, 2 + firstWordWidth, 2 + this.yOffset.getValue(), 0xFFFFFF);
         }
         if (this.gaymark.getValue().booleanValue()) {
             event.getContext().drawTextWithShadow(HudModule.mc.textRenderer, "gayretard.club", 2, 150, globalColor);
